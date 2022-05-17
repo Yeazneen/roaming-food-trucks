@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const foodTruckSchema = new mongoose.Schema(
+const foodTruckSchema = new Schema(
     {
         foodTruckName: String,
+        description:String,
         img: String,
-        location: [{
+        phone: String,
+        location: {
             locationName: String,
             street: String,
             city: String,
@@ -16,7 +19,7 @@ const foodTruckSchema = new mongoose.Schema(
                     end: Number
                 }]
             }]
-        }],
+        },
         cuisine: [{
             type: String,
             enum: [
@@ -28,7 +31,7 @@ const foodTruckSchema = new mongoose.Schema(
             ref: 'Review'
         }],
         currentRating: Number,
-        menu: [{
+        menu: {
             apps: [{
                 dishName: String,
                 description: String,
@@ -54,14 +57,16 @@ const foodTruckSchema = new mongoose.Schema(
                 description: String,
                 price: Number
             }]
-        }]
+        }
     }
 );
 
 foodTruckSchema.pre('save', async function (next) {
-    await this.populate('reviews')
-    let aggregateRating = this.reviews.reduce((acc, review) => acc + parseInt(review.rating), 0)
-    this.currentRating = aggregateRating
+    if (this.reviews.length > 0) {
+        await this.populate('reviews')
+        let aggregateRating = this.reviews.reduce((acc, review) => acc + parseInt(review.rating), 0)
+        this.currentRating = aggregateRating
+    }
     return next();
 });
 

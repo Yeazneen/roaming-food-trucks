@@ -1,6 +1,7 @@
 import './App.css';
 import HomePage from '../HomePage/HomePage';
 import * as FoodtruckAPI from '../../utilities/foodTruck-api'
+import FoodTruckDetailPage from '../FoodTruckDetailPage/FoodTruckDetailPage';
 import {useState, useEffect} from 'react'
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
   return (
     <div className="App">
    <HomePage foodTrucks={foodTrucks} />
+   <FoodTruckDetailPage />
     </div>
   );
 }
